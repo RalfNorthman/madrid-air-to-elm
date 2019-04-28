@@ -24,13 +24,15 @@ fn main() -> hdf5::Result<()> {
         // read
 
         let file = hdf5::File::open("air-quality-madrid/madrid.h5", "r")?;
-        let master = file.group("/master")?;
+        let master = file.group("master")?;
         let name = master.name();
         let filename = master.filename();
         let len = master.len();
-        println!("Name is: {:?}", name);
-        println!("Filename is: {:?}", filename);
-        println!("There is: {:?} objects in {:?}", len, name);
+        let props = file.get_create_plist()?.properties();
+        println!("Name is {:?}", name);
+        println!("Filename is {:?}", filename);
+        println!("There is {:?} objects in {:?}", len, name);
+        println!("Properties are {:?}", props);
     }
     Ok(())
 }
