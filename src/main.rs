@@ -27,12 +27,14 @@ fn main() -> hdf5::Result<()> {
         let master = file.group("master")?;
         let name = master.name();
         let filename = master.filename();
-        let len = master.len();
         let props = file.get_create_plist()?.properties();
+        println!("");
         println!("Name is {:?}", name);
+        println!("");
         println!("Filename is {:?}", filename);
-        println!("There is {:?} objects in {:?}", len, name);
+        println!("");
         println!("Properties are {:?}", props);
+        println!("");
     }
     Ok(())
 }
