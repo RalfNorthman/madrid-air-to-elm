@@ -2,10 +2,8 @@ extern crate csv;
 #[macro_use]
 extern crate serde_derive;
 extern crate chrono;
-extern crate chrono_tz;
 
-use chrono::{DateTime, NaiveDateTime, TimeZone};
-use chrono_tz::Europe::Madrid;
+use chrono::NaiveDateTime;
 use std::error::Error;
 use std::io;
 use std::process;
@@ -57,11 +55,7 @@ impl Record {
 }
 
 fn to_posix(ndt: NaiveDateTime) -> String {
-    let millis: i64 = Madrid
-        .from_local_datetime(&ndt)
-        .earliest()
-        .unwrap()
-        .timestamp_millis();
+    let millis: i64 = ndt.timestamp_millis();
     format!("(Posix {})", millis)
 }
 
@@ -78,7 +72,7 @@ fn example() -> Result<(), Box<Error>> {
         // Notice that we need to provide a type hint for automatic
         // deserialization.
         let record: Record = result?;
-        println!("{:?}", record.to_elm());
+        println!("{}", record.to_elm());
     }
     Ok(())
 }
