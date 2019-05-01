@@ -2,8 +2,10 @@ extern crate csv;
 #[macro_use]
 extern crate serde_derive;
 extern crate chrono;
+extern crate chrono_tz;
 
-use chrono::NaiveDateTime;
+use chrono::{DateTime, NaiveDateTime, TimeZone};
+use chrono_tz::Europe::Madrid;
 use std::error::Error;
 use std::io;
 use std::process;
@@ -34,7 +36,7 @@ impl Record {
     fn to_elm(&self) -> String {
         format!(
             ", Record {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {}",
-            self.date,
+            to_posix(self.date),
             to_maybe(self.ben),
             to_maybe(self.ch4),
             to_maybe(self.co),
@@ -54,7 +56,16 @@ impl Record {
     }
 }
 
-pub fn to_maybe(opt: Option<f64>) -> String {
+fn to_posix(ndt: NaiveDateTime) -> String {
+    let millis: i64 = Madrid
+        .from_local_datetime(&ndt)
+        .earliest()
+        .unwrap()
+        .timestamp_millis();
+    format!("(Posix {})", millis)
+}
+
+fn to_maybe(opt: Option<f64>) -> String {
     match opt {
         None => String::from("Nothing"),
         Some(f) => format!("(Just {})", f),
